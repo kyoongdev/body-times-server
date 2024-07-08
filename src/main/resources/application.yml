@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/body-times?serverTimezone=Asia/Seoul
+    username: kyoong
+    password: kyoongdevSecret123!@#
+
+
+springdoc:
+  swagger-ui:
+    path: /api-docs
+
+    groups-order: DESC # path, query, body, response ??? ??
+
+    tags-sorter: alpha # ??? ??? ??? ??
+
+    operations-sorter: method  # delete - get - patch - post - put ??? ??, alpha? ???? ??? ??? ?? ??
+
+  paths-to-match:
+    - /api/** # swagger-ui? ??? api? ????? ??
