@@ -25,7 +25,6 @@ public class User {
   private UUID id;
   @Column(nullable = false)
   private String nickname;
-
   @Column(unique = true)
   private String socialId;
   @Column(nullable = false)

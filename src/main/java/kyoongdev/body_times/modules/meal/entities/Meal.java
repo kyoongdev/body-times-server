@@ -27,11 +27,8 @@ public class Meal {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
-
   @ManyToOne(fetch = FetchType.LAZY)
   private Food food;
-
-
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
   @Column(nullable = false)
@@ -40,7 +37,6 @@ public class Meal {
   private int month;
   @Column(nullable = false)
   private int day;
-
   @Column(nullable = true)
   private int grams;
 
