@@ -1,4 +1,4 @@
-package kyoongdev.body_times.common.error;
+package kyoongdev.body_times.common.exception;
 
 import org.springframework.http.HttpStatus;
 
