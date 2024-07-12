@@ -7,6 +7,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+  devtools:
+    restart:
+      enabled: true
+  servlet:
+    contextPath: /api/v1
+
 
 springdoc:
   swagger-ui:
@@ -18,5 +24,3 @@ springdoc:
 
     operations-sorter: method  # delete - get - patch - post - put ??? ??, alpha? ???? ??? ??? ?? ??
 
-  paths-to-match:
-    - /api/** # swagger-ui? ??? api? ????? ??
