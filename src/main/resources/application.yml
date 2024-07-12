@@ -10,6 +10,8 @@ spring:
   devtools:
     restart:
       enabled: true
+    livereload:
+      enabled: true
   servlet:
     contextPath: /api/v1
 
