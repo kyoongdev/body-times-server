@@ -1,4 +1,4 @@
-package kyoongdev.body_times.common.dto;
+package kyoongdev.body_times.common.paging;
 
 
 import lombok.AllArgsConstructor;
