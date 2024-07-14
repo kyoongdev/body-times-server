@@ -4,10 +4,13 @@ package kyoongdev.body_times.modules.food;
 import java.util.Optional;
 import java.util.UUID;
 import kyoongdev.body_times.common.exception.CustomException;
+import kyoongdev.body_times.common.paging.PaginationDTO;
+import kyoongdev.body_times.common.paging.PagingDTO;
 import kyoongdev.body_times.modules.food.dto.FoodDTO;
 import kyoongdev.body_times.modules.food.entities.Food;
 import kyoongdev.body_times.modules.food.exception.FoodErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,6 +29,13 @@ public class FoodService {
     }
 
     return FoodDTO.fromEntity(food.get());
+  }
+
+
+  PaginationDTO<FoodDTO> findFoods(PagingDTO paging) {
+    Page<Food> foods = foodRepository.findAll(paging.toPageable());
+
+    return PaginationDTO.of(foods.map(FoodDTO::fromEntity), paging, foods.getSize());
   }
 
 
