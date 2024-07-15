@@ -7,6 +7,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+    show-sql: true
   devtools:
     restart:
       enabled: true
@@ -14,6 +15,8 @@ spring:
       enabled: true
   servlet:
     contextPath: /api/v1
+  thymeleaf:
+    cache: false
 
 
 springdoc:

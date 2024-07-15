@@ -1,22 +1,27 @@
 package kyoongdev.body_times.common.paging;
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
+@Schema(description = "PageMetaDTO")
 public class PageMetaDTO {
 
+  @Schema(description = "총 개수")
   private int total;
 
+  @Schema(description = "현재 페이지")
+  private int page;
 
-  private int number;
-
-
+  @Schema(description = "데이터 개수")
   private int limit;
 
+  @Schema(description = "이전 페이지 존재 유무")
   private boolean hasPrev;
-
-
+  @Schema(description = "다음 페이지 존재 유무")
   private boolean hasNext;
 
 

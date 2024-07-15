@@ -3,18 +3,24 @@ package kyoongdev.body_times.modules.food;
 
 import java.util.Optional;
 import java.util.UUID;
+import kyoongdev.body_times.common.dto.ResponseWithIdDTO;
 import kyoongdev.body_times.common.exception.CustomException;
 import kyoongdev.body_times.common.paging.PaginationDTO;
 import kyoongdev.body_times.common.paging.PagingDTO;
+import kyoongdev.body_times.modules.food.dto.CreateFoodDTO;
 import kyoongdev.body_times.modules.food.dto.FoodDTO;
+import kyoongdev.body_times.modules.food.dto.UpdateFoodDTO;
+import kyoongdev.body_times.modules.food.dto.query.FindFoodsQuery;
 import kyoongdev.body_times.modules.food.entities.Food;
 import kyoongdev.body_times.modules.food.exception.FoodErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class FoodService {
 
   private final FoodRepository foodRepository;
@@ -32,10 +38,31 @@ public class FoodService {
   }
 
 
-  PaginationDTO<FoodDTO> findFoods(PagingDTO paging) {
-    Page<Food> foods = foodRepository.findAll(paging.toPageable());
+  PaginationDTO<FoodDTO> findFoods(PagingDTO paging, FindFoodsQuery query) {
+    log.info("이름 : " + query.getName());
+    Page<Food> foods = foodRepository.findAllByName(query.getName(), paging.toPageable());
+    Page<Food> foods2 = foodRepository.findAll(paging.toPageable());
 
-    return PaginationDTO.of(foods.map(FoodDTO::fromEntity), paging, foods.getSize());
+    log.info(foods.toString());
+    log.info(foods2.toString());
+    return PaginationDTO.of(foods.map(FoodDTO::fromEntity), paging, foods.getTotalElements());
+  }
+
+  ResponseWithIdDTO createFoods(CreateFoodDTO data) {
+    Food food = foodRepository.save(data.toEntity());
+
+    return new ResponseWithIdDTO(food.getId().toString());
+  }
+
+  void updateFood(UUID id, UpdateFoodDTO data) {
+    findFoodById(id);
+
+  }
+
+  void deleteFood(UUID id) {
+    findFoodById(id);
+
+    foodRepository.deleteById(id);
   }
 
 

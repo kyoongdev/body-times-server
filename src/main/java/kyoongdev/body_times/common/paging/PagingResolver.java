@@ -23,7 +23,10 @@ public class PagingResolver implements HandlerMethodArgumentResolver {
       NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
     int page = Integer.parseInt(Objects.requireNonNull(webRequest.getParameter("page")));
     int limit = Integer.parseInt(Objects.requireNonNull(webRequest.getParameter("limit")));
+    PagingDTO paging = new PagingDTO();
+    paging.setPage(page);
+    paging.setLimit(limit);
 
-    return new PagingDTO(page, limit);
+    return paging;
   }
 }
