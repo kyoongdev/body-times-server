@@ -4,13 +4,16 @@ package kyoongdev.body_times.utils.social;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import kyoongdev.body_times.utils.social.dto.KakaoCallback;
 import kyoongdev.body_times.utils.social.dto.KakaoUser;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
+@Slf4j
 public class KakaoSocial {
 
 
@@ -33,7 +36,7 @@ public class KakaoSocial {
     response.sendRedirect(url);
   }
 
-  public String getToken(String code) throws IOException {
+  public String getToken(String code) {
     WebClient webClient = WebClient.builder().baseUrl("https://kauth.kakao.com/oauth/token")
         .build();
 
@@ -42,13 +45,12 @@ public class KakaoSocial {
                 .queryParam("client_id", clientId).queryParam("client_secret", clientSecret)
                 .queryParam("redirectUri", redirectUrl).queryParam("code", code).build()).retrieve()
         .bodyToMono(Map.class).block();
+    log.info(response.toString());
 
-    Map<String, Object> data = (Map<String, Object>) response.get("data");
-
-    return (String) data.get("access_token");
+    return (String) response.get("access_token");
   }
 
-  public KakaoUser getUser(String token) throws IOException {
+  public KakaoUser getUser(String token) {
     WebClient webClient = WebClient.builder().baseUrl("https://kapi.kakao.com/v2/user/me")
         .defaultHeaders(headers -> {
           headers.setBearerAuth(token);
@@ -56,16 +58,18 @@ public class KakaoSocial {
         }).build();
 
     Map response = webClient.get().retrieve().bodyToMono(Map.class).block();
+    log.info("user: " + response.toString());
+    String id = (String) response.get("id").toString();
+    Map<String, Object> kakaoAccount = (Map<String, Object>) response.get("kakaoAccount");
 
-    Map<String, Object> data = (Map<String, Object>) response.get("data");
+    String email = Optional.ofNullable(kakaoAccount)
+        .map(account -> (String) account.get("email"))
+        .orElse(null);
 
-    String id = (String) data.get("id");
-    Map<String, Object> kakaoAccount = (Map<String, Object>) data.get("kakaoAccount");
-
-    return KakaoUser.builder().id(id).email((String) kakaoAccount.get("email")).build();
+    return KakaoUser.builder().id(id).email(email).build();
   }
 
-  public KakaoCallback getRestCallback(String code) throws IOException {
+  public KakaoCallback getRestCallback(String code) {
     String token = getToken(code);
     KakaoUser user = getUser(token);
 

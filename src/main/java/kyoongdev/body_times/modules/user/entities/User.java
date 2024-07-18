@@ -13,23 +13,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name= "user")
+@Entity(name = "user")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
 public class User {
+
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
-  @Column(nullable = false)
+  @Column(nullable = true)
   private String nickname;
   @Column(unique = true)
   private String socialId;
-  @Column(nullable = false)
+  @Column(nullable = true)
   private Double height;
-  @Column(nullable = false)
+  @Column(nullable = true)
   private Double weight;
   @Column(nullable = true)
   private Double maintainCalorie;
