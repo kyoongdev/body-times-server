@@ -28,6 +28,10 @@ social:
     scope:
       - account_email
       - profile_nickname
+jwt:
+  secret: 4uN1J3aA4ncaMHGIQZ0d1L0X5mLMTbpQ
+  access_token_expires_in: 43200000 # 12시간
+  refresh_token_expires_in: 604800000 # 7일
 
 springdoc:
   swagger-ui:
