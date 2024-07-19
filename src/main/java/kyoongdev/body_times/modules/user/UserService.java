@@ -7,9 +7,9 @@ import kyoongdev.body_times.modules.user.dto.UserDTO;
 import kyoongdev.body_times.modules.user.entities.User;
 import kyoongdev.body_times.modules.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class UserService {
 
