@@ -1,4 +1,4 @@
-package kyoongdev.body_times.config.jwt;
+package kyoongdev.body_times.utils.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -7,13 +7,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-// NOTE : Jwt Filter 적용
 
 @RequiredArgsConstructor
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
 
   private final JwtProvider jwtProvider;
@@ -23,12 +24,13 @@ public class JwtFilter extends OncePerRequestFilter {
       FilterChain filterChain) throws ServletException, IOException {
 
     Optional<String> token = jwtProvider.resolveToken(request);
-
     if (token.isPresent()) {
-      Authentication auth = jwtProvider.getAuthentication(
-          jwtProvider.validateToken(token.get()).getSubject());
 
-      SecurityContextHolder.getContext().setAuthentication(auth); // 정상 토큰이면 SecurityContext에 저장
+      Authentication auth = jwtProvider.getAuthentication(
+          jwtProvider.validateToken(token.get()).getSubject()
+      );
+
+      SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
     filterChain.doFilter(request, response);

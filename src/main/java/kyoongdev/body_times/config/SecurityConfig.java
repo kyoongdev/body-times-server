@@ -1,8 +1,10 @@
 package kyoongdev.body_times.config;
 
 
-import kyoongdev.body_times.config.jwt.JwtFilter;
-import kyoongdev.body_times.config.jwt.JwtProvider;
+import kyoongdev.body_times.utils.jwt.JwtAccessDeniedHandler;
+import kyoongdev.body_times.utils.jwt.JwtAuthenticationEntryPoint;
+import kyoongdev.body_times.utils.jwt.JwtFilter;
+import kyoongdev.body_times.utils.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
   private final JwtProvider jwtProvider;
+  private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+  private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
   @Bean
   public AuthenticationManager authenticationManager(
@@ -38,9 +42,17 @@ public class SecurityConfig {
     http
         .csrf(AbstractHttpConfigurer::disable)
         .cors(AbstractHttpConfigurer::disable)
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/**").permitAll()
+            .anyRequest().authenticated()
+        )
         .sessionManagement(m -> m.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .formLogin(AbstractHttpConfigurer::disable)
         .httpBasic(AbstractHttpConfigurer::disable)
+        .exceptionHandling((exceptionHandling) -> exceptionHandling
+            .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+            .accessDeniedHandler(jwtAccessDeniedHandler)
+        )
         .headers((headerConfig) -> headerConfig.frameOptions(FrameOptionsConfig::disable)
         ).addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 

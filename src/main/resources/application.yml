@@ -6,7 +6,7 @@ spring:
     password: kyoongdevSecret123!@#
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
   devtools:
     restart:
@@ -20,6 +20,10 @@ spring:
 
 
 client_url: http://localhost:3000
+
+api:
+  server:
+    url: http://localhost:8080
 
 social:
   kakao:

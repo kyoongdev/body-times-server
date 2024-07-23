@@ -2,11 +2,12 @@ package kyoongdev.body_times.modules.auth;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import kyoongdev.body_times.config.jwt.JwtProvider;
+import java.util.Optional;
 import kyoongdev.body_times.modules.auth.dto.TokenDTO;
 import kyoongdev.body_times.modules.user.UserRepository;
 import kyoongdev.body_times.modules.user.dto.CreateSocialUserDTO;
 import kyoongdev.body_times.modules.user.entities.User;
+import kyoongdev.body_times.utils.jwt.JwtProvider;
 import kyoongdev.body_times.utils.social.KakaoSocial;
 import kyoongdev.body_times.utils.social.dto.KakaoUser;
 import lombok.RequiredArgsConstructor;
@@ -37,10 +38,16 @@ public class AuthService {
   public void kakaoCallback(String code, HttpServletResponse response) throws IOException {
     KakaoUser user = kakaoSocial.getRestCallback(code).getUser();
 
-    User newUser = userRepository.save(CreateSocialUserDTO.toEntity(user));
-
-    TokenDTO token = jwtProvider.createToken(
-        jwtProvider.getAuthentication(newUser.getId().toString()));
+    Optional<User> isExists = userRepository.findUserBySocialId(user.getId());
+    TokenDTO token;
+    if (isExists.isPresent()) {
+      token = jwtProvider.createToken(
+          jwtProvider.getAuthentication(isExists.get().getId().toString()));
+    } else {
+      User newUser = userRepository.save(CreateSocialUserDTO.toEntity(user));
+      token = jwtProvider.createToken(
+          jwtProvider.getAuthentication(newUser.getId().toString()));
+    }
 
     String redirectUri = UriComponentsBuilder.fromUriString(clientUrl)
         .replaceQueryParam("accessToken", token.getAccessToken())
@@ -52,5 +59,5 @@ public class AuthService {
     response.sendRedirect(redirectUri);
 
   }
-  
+
 }

@@ -1,4 +1,4 @@
-package kyoongdev.body_times.config.jwt;
+package kyoongdev.body_times.utils.jwt;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +17,7 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
   public void handle(HttpServletRequest request, HttpServletResponse response,
       AccessDeniedException accessDeniedException)
       throws IOException, ServletException {
-
+    
     response.sendError(HttpServletResponse.SC_FORBIDDEN);
 
   }

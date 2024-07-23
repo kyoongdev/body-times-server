@@ -1,4 +1,4 @@
-package kyoongdev.body_times.config.jwt;
+package kyoongdev.body_times.utils.jwt;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

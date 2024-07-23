@@ -1,4 +1,4 @@
-package kyoongdev.body_times.config.jwt;
+package kyoongdev.body_times.utils.jwt;
 
 import kyoongdev.body_times.common.exception.CustomExceptionInterface;
 import lombok.AllArgsConstructor;

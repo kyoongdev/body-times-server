@@ -1,4 +1,4 @@
-package kyoongdev.body_times.config.jwt;
+package kyoongdev.body_times.utils.jwt;
 
 
 import io.jsonwebtoken.Claims;
@@ -16,6 +16,7 @@ import kyoongdev.body_times.modules.user.CustomUserDetail;
 import kyoongdev.body_times.modules.user.CustomUserDetailService;
 import kyoongdev.body_times.modules.user.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtProvider {
 
   private final UserService userService;
@@ -56,7 +58,9 @@ public class JwtProvider {
 
     return Jwts.builder()
         .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-        .setExpiration(new Date(date.getTime() + expiresIn)).claim("id", id).signWith(
+        .setExpiration(new Date(date.getTime() + expiresIn)).setClaims(Jwts.claims().setSubject(id))
+        .claim("id", id)
+        .signWith(
             SignatureAlgorithm.HS256, secret).compact();
   }
 
@@ -92,6 +96,7 @@ public class JwtProvider {
 
 
   public Authentication getAuthentication(String subject) {
+
     CustomUserDetail userDetails = customUserDetailService.loadUserByUsername(subject);
     return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
   }

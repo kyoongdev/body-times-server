@@ -1,6 +1,7 @@
 package kyoongdev.body_times.modules.user;
 
 
+import java.util.Optional;
 import java.util.UUID;
 import kyoongdev.body_times.common.exception.CustomException;
 import kyoongdev.body_times.modules.user.dto.UserDTO;
@@ -17,10 +18,13 @@ public class UserService {
 
 
   public UserDTO findUserById(UUID id) {
-    User user = userRepository.findById(id)
-        .orElseThrow(() -> new CustomException(UserErrorCode.NOT_FOUND));
+    Optional<User> user = userRepository.findById(id);
 
-    return UserDTO.fromEntity(user);
+    if (user.isEmpty()) {
+      throw new CustomException(UserErrorCode.NOT_FOUND);
+    }
+
+    return UserDTO.fromEntity(user.get());
   }
 
 }
