@@ -2,6 +2,7 @@ package kyoongdev.body_times.modules.user;
 
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,6 +16,8 @@ public class CustomUserDetail implements UserDetails {
 
   CustomUserDetail(String id) {
     this.id = id;
+    this.authorities = new HashSet<>();
+    this.authorities.add((GrantedAuthority) () -> "USER");
   }
 
   @Override

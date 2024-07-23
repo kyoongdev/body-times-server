@@ -43,13 +43,14 @@ public class AuthService {
         jwtProvider.getAuthentication(newUser.getId().toString()));
 
     String redirectUri = UriComponentsBuilder.fromUriString(clientUrl)
-        .queryParam("accessToken", token.getAccessToken())
-        .queryParam("refreshToken", token.getRefreshToken())
+        .replaceQueryParam("accessToken", token.getAccessToken())
+        .replaceQueryParam("refreshToken", token.getRefreshToken())
         .build().toUriString();
-    
+
+    log.info(redirectUri);
+
     response.sendRedirect(redirectUri);
 
   }
-
-
+  
 }
