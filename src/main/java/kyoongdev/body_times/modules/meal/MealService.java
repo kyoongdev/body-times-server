@@ -10,6 +10,7 @@ import kyoongdev.body_times.modules.food.entities.Food;
 import kyoongdev.body_times.modules.food.exception.FoodErrorCode;
 import kyoongdev.body_times.modules.meal.dto.CreateMealDTO;
 import kyoongdev.body_times.modules.meal.dto.MealDTO;
+import kyoongdev.body_times.modules.meal.dto.UpdateMealDTO;
 import kyoongdev.body_times.modules.meal.entities.Meal;
 import kyoongdev.body_times.modules.meal.exception.MealErrorCode;
 import kyoongdev.body_times.modules.user.UserRepository;
@@ -27,19 +28,16 @@ public class MealService {
   private final FoodRepository foodRepository;
 
 
-  MealDTO findMealById(UUID id) {
-    Optional<Meal> meal = mealRepository.findById(id);
+  MealDTO findMyMealById(String id, String userId) {
 
-    if (meal.isEmpty()) {
-      throw new CustomException(MealErrorCode.NOT_FOUND);
-    }
+    Meal meal = checkMealAndUser(id, userId);
 
-    return MealDTO.fromEntity(meal.get());
+    return MealDTO.fromEntity(meal);
   }
 
 
-  ResponseWithIdDTO createMeal(UUID userId, CreateMealDTO data) {
-    Optional<User> user = userRepository.findById(userId);
+  ResponseWithIdDTO createMeal(String userId, CreateMealDTO data) {
+    Optional<User> user = userRepository.findById(UUID.fromString(userId));
 
     if (user.isEmpty()) {
       throw new CustomException(UserErrorCode.NOT_FOUND);
@@ -54,6 +52,40 @@ public class MealService {
     Meal meal = mealRepository.save(data.toEntity(food.get(), user.get()));
 
     return new ResponseWithIdDTO(meal.getId().toString());
+  }
+
+  void updateMeal(String mealId, String userId, UpdateMealDTO data) {
+
+    Meal meal = checkMealAndUser(mealId, userId);
+
+    mealRepository.save(data.toEntity(meal));
+  }
+
+  void deleteMeal(String mealId, String userId) {
+
+    Meal meal = checkMealAndUser(mealId, userId);
+
+    mealRepository.deleteById(meal.getId());
+  }
+
+  Meal checkMealAndUser(String mealId, String userId) {
+    Optional<Meal> meal = mealRepository.findById(UUID.fromString((mealId)));
+
+    if (meal.isEmpty()) {
+      throw new CustomException(MealErrorCode.NOT_FOUND);
+    }
+
+    Optional<User> user = userRepository.findById(UUID.fromString(userId));
+
+    if (user.isEmpty()) {
+      throw new CustomException(UserErrorCode.NOT_FOUND);
+    }
+
+    if (meal.get().getUser().getId() != user.get().getId()) {
+      throw new CustomException(MealErrorCode.NOT_MY_MEAL);
+    }
+
+    return meal.get();
   }
 
 

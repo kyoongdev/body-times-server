@@ -18,6 +18,7 @@ public class GetUserArgumentResolver implements HandlerMethodArgumentResolver {
 
   @Override
   public boolean supportsParameter(MethodParameter parameter) {
+
     return parameter.getParameterType().isAssignableFrom(CustomUserDetail.class)
         && parameter.hasParameterAnnotation(GetUser.class);
   }

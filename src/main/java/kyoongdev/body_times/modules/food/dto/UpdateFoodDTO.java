@@ -2,13 +2,16 @@ package kyoongdev.body_times.modules.food.dto;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import kyoongdev.body_times.common.dto.BaseUpdateDTO;
 import kyoongdev.body_times.modules.food.entities.Food;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
-public class UpdateFoodDTO {
+public class UpdateFoodDTO extends BaseUpdateDTO {
 
 
   @Schema(description = "음식 이름", type = "string")
@@ -27,14 +30,10 @@ public class UpdateFoodDTO {
   private Double calorie;
 
 
-  public Food toEntity() {
-    return Food.builder()
-        .name(name)
-        .fat(fat)
-        .carbo(carbo)
-        .protein(protein)
-        .calorie(calorie)
-        .build();
+  public Food toEntity(Food food) {
+
+    myCopyProperties(this, food);
+    return food;
   }
 
 }

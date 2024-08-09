@@ -41,10 +41,7 @@ public class FoodService {
   PaginationDTO<FoodDTO> findFoods(PagingDTO paging, FindFoodsQuery query) {
     log.info("이름 : " + query.getName());
     Page<Food> foods = foodRepository.findAllByName(query.getName(), paging.toPageable());
-    Page<Food> foods2 = foodRepository.findAll(paging.toPageable());
 
-    log.info(foods.toString());
-    log.info(foods2.toString());
     return PaginationDTO.of(foods.map(FoodDTO::fromEntity), paging, foods.getTotalElements());
   }
 
