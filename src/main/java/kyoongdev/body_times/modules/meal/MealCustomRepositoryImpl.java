@@ -5,9 +5,7 @@ import static kyoongdev.body_times.modules.meal.entities.QMeal.meal;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
-import java.util.stream.Collectors;
 import kyoongdev.body_times.modules.food.entities.QFood;
-import kyoongdev.body_times.modules.meal.dto.MealDTO;
 import kyoongdev.body_times.modules.meal.dto.query.FindMealQuery;
 import kyoongdev.body_times.modules.meal.entities.Meal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +28,7 @@ public class MealCustomRepositoryImpl extends QuerydslRepositorySupport implemen
 
 
   @Override
-  public Page<MealDTO> findManyMeals(String userId, FindMealQuery query) {
+  public Page<Meal> findMealsByUserId(String userId, FindMealQuery query) {
 
     QFood food = QFood.food;
 
@@ -45,9 +43,8 @@ public class MealCustomRepositoryImpl extends QuerydslRepositorySupport implemen
         .where(query.eqYear(meal), query.eqMonth(meal), query.eqDay(meal)).fetchOne();
 
     assert count != null;
-    
-    return new PageImpl<>(meals.stream().map(MealDTO::fromEntity).collect(Collectors.toList()),
-        query.toPageable(), count.intValue());
+
+    return new PageImpl<>(meals, query.toPageable(), count.intValue());
   }
 
 

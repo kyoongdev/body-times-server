@@ -5,18 +5,22 @@ import java.util.Optional;
 import java.util.UUID;
 import kyoongdev.body_times.common.dto.ResponseWithIdDTO;
 import kyoongdev.body_times.common.exception.CustomException;
+import kyoongdev.body_times.common.paging.PaginationDTO;
+import kyoongdev.body_times.common.paging.PagingDTO;
 import kyoongdev.body_times.modules.food.FoodRepository;
 import kyoongdev.body_times.modules.food.entities.Food;
 import kyoongdev.body_times.modules.food.exception.FoodErrorCode;
 import kyoongdev.body_times.modules.meal.dto.CreateMealDTO;
 import kyoongdev.body_times.modules.meal.dto.MealDTO;
 import kyoongdev.body_times.modules.meal.dto.UpdateMealDTO;
+import kyoongdev.body_times.modules.meal.dto.query.FindMealQuery;
 import kyoongdev.body_times.modules.meal.entities.Meal;
 import kyoongdev.body_times.modules.meal.exception.MealErrorCode;
 import kyoongdev.body_times.modules.user.UserRepository;
 import kyoongdev.body_times.modules.user.entities.User;
 import kyoongdev.body_times.modules.user.exception.UserErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,6 +37,13 @@ public class MealService {
     Meal meal = checkMealAndUser(id, userId);
 
     return MealDTO.fromEntity(meal);
+  }
+
+  PaginationDTO<MealDTO> findMyMeals(String userId, PagingDTO paging, FindMealQuery query) {
+    Page<Meal> meals = foodRepository.findMealsByUserId(userId, query);
+
+    return PaginationDTO.of(meals.map(MealDTO::fromEntity), paging, meals.getTotalElements());
+
   }
 
 

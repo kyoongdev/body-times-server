@@ -29,7 +29,9 @@ public class MealDTO {
 
 
   public static MealDTO fromEntity(Meal meal) {
-    return MealDTO.builder().id(meal.getId().toString()).build();
+    return MealDTO.builder().id(meal.getId().toString()).food(FoodDTO.fromEntity(meal.getFood()))
+        .year(meal.getYear()).day(meal.getDay()).month(meal.getMonth()).grams(meal.getGrams())
+        .build();
   }
 
 

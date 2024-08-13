@@ -4,7 +4,13 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import io.swagger.v3.oas.annotations.media.Schema;
 import kyoongdev.body_times.common.paging.PagingDTO;
 import kyoongdev.body_times.modules.meal.entities.QMeal;
+import lombok.Getter;
+import lombok.Setter;
 
+
+@Getter
+@Setter
+@Schema(name = "FindMealQuery")
 public class FindMealQuery extends PagingDTO {
 
   @Schema(type = "number", nullable = true)

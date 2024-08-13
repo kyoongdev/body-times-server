@@ -16,10 +16,10 @@ import org.springframework.data.domain.Pageable;
 public class PagingDTO {
 
   @Schema(description = "페이지", nullable = false)
-  private int page;
+  private Integer page;
 
   @Schema(description = "개수", nullable = false)
-  private int limit;
+  private Integer limit;
 
   public Pageable toPageable() {
     return PageRequest.of(page - 1, limit);

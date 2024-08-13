@@ -10,11 +10,16 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kyoongdev.body_times.common.annotations.GetUser;
 import kyoongdev.body_times.common.dto.EmptyResponseDTO;
 import kyoongdev.body_times.common.dto.ResponseWithIdDTO;
+import kyoongdev.body_times.common.paging.PaginationDTO;
+import kyoongdev.body_times.common.paging.Paging;
+import kyoongdev.body_times.common.paging.PagingDTO;
 import kyoongdev.body_times.modules.meal.dto.CreateMealDTO;
 import kyoongdev.body_times.modules.meal.dto.MealDTO;
 import kyoongdev.body_times.modules.meal.dto.UpdateMealDTO;
+import kyoongdev.body_times.modules.meal.dto.query.FindMealQuery;
 import kyoongdev.body_times.modules.user.CustomUserDetail;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +37,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class MealController {
 
   private final MealService mealService;
+
+
+  @GetMapping()
+  @SecurityRequirement(name = "Bearer Authentication")
+  @PreAuthorize("hasAuthority('USER')")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = FindMealsResponseDTO.class)))
+  })
+  public PaginationDTO<MealDTO> findMeals(@GetUser CustomUserDetail user, @Paging PagingDTO paging,
+      @ParameterObject FindMealQuery query) {
+    return mealService.findMyMeals(user.getId(), paging, query);
+  }
 
 
   @GetMapping("{mealId}/detail")
